@@ -30,3 +30,34 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"Hi": "world"}
+
+# Global Variables
+# 0 -> normal 1 -> warn 2 -> danger
+STATUS: int = 0
+
+# Hard
+@app.get("/hard/get_status")
+def hard_get_status():
+    return {"status": STATUS}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Front
