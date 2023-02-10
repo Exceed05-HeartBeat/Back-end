@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from database import db, hb_collection
+from . import database
 
 router = APIRouter(prefix="/front")
 
