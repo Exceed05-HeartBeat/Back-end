@@ -3,6 +3,7 @@ from database import db, hb_collection
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
+from database import HeartRate
 router = APIRouter(prefix="/hard")
 
 class Bpm(BaseModel):
@@ -92,3 +93,6 @@ def hard_on_off(on_off: OnOff):
     is_on = on_off.is_on
     hb_collection.update_many({}, {"$set": {"is_on": is_on}})
     return "ON/OFF OK"
+
+@router.post("/insert_normal"):
+def inser_normal()
