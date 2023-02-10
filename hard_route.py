@@ -29,6 +29,11 @@ def clear_history(hr: int):
 
 def get_field_from_hb_collection(k: list):
     ret = {}
+    data = hb_collection.find_one({}, {"_id": id});
+    if not data:
+        print("Not Ok")
+    for r in k:
+        ret[r] = data[r]
     return ret
 
 @router.get("/debug/mock_hb_history")
