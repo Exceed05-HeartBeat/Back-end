@@ -4,25 +4,26 @@ import os
 from pydantic import BaseModel
 from typing import Optional
 from pymongo import MongoClient
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 import front_route
 import hard_route
 from database import db, hb_collection
 
-
-app = FastAPI()
-app.include_router(front_route.router)
-app.include_router(hard_route.router)
-
 origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
+middleware = [
+    Middleware(CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
-)
+    allow_headers=["*"])
+]
+
+app = FastAPI(middleware=middleware)
+app.include_router(front_route.router)
+app.include_router(hard_route.router)
+
+
 
 @app.get("/")
 def root():
