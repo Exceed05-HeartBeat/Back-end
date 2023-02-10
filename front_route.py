@@ -30,15 +30,29 @@ def front_get_normal_heartrate():
     hr = hb_collection.find_one({}, {"_id": False})
     return hr["excercise_heartrate"]
 
+def calculate_maxrate():
+    hr = hb_collection.find_one({}, {"_id": False})
+    birth = hr["birth"]
+    year = datetime.datetime.strptime(birth, '%Y-%m-%d').year
+    current_year = datetime.datetime.now().year
+    age = current_year - year
+    max_rate = 207 - (age*0.7)
+    return max_rate
 #need to insert insteed of update
 @router.post("/data")
 def front_post_data(heartrate: HeartRate = Body()):
-    # hb_collection.insert_one({"name":heartrate.name, "birth":heartrate.birth})
-    print(datetime.datetime.strptime(heartrate.birth, '%Y-%m-%d').year)
+    hb_collection.update_one({}, {"$set" :{"name":heartrate.name, "birth":heartrate.birth}})
+    # print(datetime.datetime.strptime(heartrate.birth, '%Y-%m-%d').year)
     return {"name":heartrate.name, "birth":heartrate.birth}
     # print(heartrate.name)
     # print(heartrate.birth)
 
+# def calculate_maxrate():
+#     hr = hb_collection.find_one({}, {"_id": False})
+#     birth = hr["birth"]
+#     year = datetime.datetime.strptime(birth, '%Y-%m-%d').year
+#     return year
+print(calculate_maxrate())
 
 
 
