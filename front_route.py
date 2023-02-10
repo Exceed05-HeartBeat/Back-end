@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body
 from database import db, hb_collection
 from database import HeartRate
 from typing import Optional
+from database import BirthName
 # from datetime import datetime, timedelta, date
 import datetime
 
@@ -16,10 +17,11 @@ def get_field_from_hb_collection(k: list):
         ret[r] = data[r]
     return ret
 
+
 @router.post("/data")
-def front_post_data(heartrate: HeartRate = Body()):
-    hb_collection.update_one({}, {"$set" :{"name":heartrate.name, "birth":heartrate.birth}})
-    return {"name":heartrate.name, "birth":heartrate.birth}
+def front_post_data(data: BirthName):
+    hb_collection.update_one({}, {"$set" :{"name":data.name, "birth":data.birth}})
+    return {"name":data.name, "birth":data.birth}
 
 def calculate_maxrate():
     hr = hb_collection.find_one({}, {"_id": False})

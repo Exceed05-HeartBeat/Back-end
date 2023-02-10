@@ -30,3 +30,7 @@ class HeartRate(BaseModel):
     normal_heartrate: Optional[List[Normal_heartrate]]
     is_on : Optional[int]
     mode: Optional[int]
+
+class BirthName(BaseModel):
+    name: str
+    birth: str
