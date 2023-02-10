@@ -27,3 +27,8 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"Hi": "world"}
+
+@app.get("/get_status")
+def hard_get_status():
+    status = hard_route.get_status()
+    return {"status": status}
