@@ -49,7 +49,14 @@ def debug_clear(hr: int):
 
 @router.get("/get_status")
 def hard_get_status():
-    status = get_field_from_hb_collection(["status"])["status"]
+    hard_rate = get_field_from_hb_collection(["hard_rate"])["hard_rate"]
+    # Mock status
+    if (hard_rate > 130):
+        status = 2
+    elif (hard_rate > 120):
+        status = 1
+    else:
+        status = 0
     return {"status": status}
 
 @router.get("/get_mode")
