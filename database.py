@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from pymongo import MongoClient
 from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from typing import Optional
 load_dotenv(".env")
 
@@ -15,10 +15,10 @@ hb_collection = db["heart-beat"]
 
 class HeartRate(BaseModel):
     name: Optional[str]
-    birth: Optional[datetime]
+    birth: Optional[str]
     current_heartrate: Optional[int]
     excercise_heartrate: Optional[int]
     normal_heartrate: Optional[int]
-    is_on : int
-    mode: int
+    is_on : Optional[int]
+    mode: Optional[int]
 
