@@ -3,7 +3,7 @@ import os
 from pymongo import MongoClient
 from pydantic import BaseModel
 from datetime import datetime, timedelta, date
-from typing import Optional
+from typing import Optional, List
 load_dotenv(".env")
 
 USER = os.getenv("username")
@@ -26,7 +26,7 @@ class HeartRate(BaseModel):
     name: Optional[str]
     birth: Optional[str]
     current_heartrate: Optional[int]
-    excercise_heartrate: list[Excercise_heartrate]
-    normal_heartrate: list[Normal_heartrate]
+    excercise_heartrate: List[str]
+    normal_heartrate: List[int]
     is_on : Optional[int]
     mode: Optional[int]
