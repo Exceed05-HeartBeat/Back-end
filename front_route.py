@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body
 from database import db, hb_collection
 from database import HeartRate
+from typing import Optional
 # from datetime import datetime, timedelta, date
 import datetime
 
@@ -44,6 +45,22 @@ def front_get_mode():
     md = hb_collection.find_one({}, {"_id": False})
     return {"current_heartrate": md["current_heartrate"]}
 
+@router.get("/get_excercise_heartrate")
+def front_get_excercise():
+    md = list(hb_collection.find({}, {"_id": False}))
+    return md[0]["excercise_heartrate"]
+
+@router.get("/get_normal_heartrate")
+def front_get_excercise():
+    md = list(hb_collection.find({}, {"_id": False}))
+    return md[0]["normal_heartrate"]
+
+@router.get("/get_all_heartrate")
+def front_get_excercise():
+    md = list(hb_collection.find({}, {"_id": False}))
+    return md[0]["normal_heartrate"] + md[0]["excercise_heartrate"]
+
+
 @router.get("/status_excersice_mode")
 def hard_get_status():
     hard_rate = get_field_from_hb_collection(["current_heartrate"])["current_heartrate"]
@@ -68,6 +85,8 @@ def hard_get_status():
     elif (hard_rate < 100): #less than 70% green
         status = 0
     return {"status": status}
+
+# print(front_get_excercise())
 
 
 
