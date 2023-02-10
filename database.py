@@ -3,7 +3,7 @@ import os
 from pymongo import MongoClient
 from pydantic import BaseModel
 from datetime import datetime, timedelta, date
-from typing import Optional
+from typing import Optional, List
 load_dotenv(".env")
 
 USER = os.getenv("username")
