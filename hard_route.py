@@ -29,6 +29,11 @@ def clear_history(hr: int):
 
 def get_field_from_hb_collection(k: list):
     ret = {}
+    data = hb_collection.find_one({}, {"_id": 0});
+    if not data:
+        print("Not Ok")
+    for r in k:
+        ret[r] = data[r]
     return ret
 
 @router.get("/debug/mock_hb_history")
@@ -66,19 +71,24 @@ def hard_get_mode():
 
 # recive bpm from hard
 @router.post("/send_bpm")
-def hard_send_bpm(bpm: Bpm = Body()): 
-    bmp = bpm.bpm
+def hard_send_bpm(bpm_get: Bpm = Body()): 
+    bpm = bpm_get.bpm
     record = {"time": datetime.now(),
               "bpm": bpm,
               "mode": 1,
               "status": 1}
-    hb_history.insert_one(record)
+    hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}})
+    return "SEND_BPM OK"
 
 # recieve change mode button
 @router.post("/change_mode")
 def hard_change_mode(chm: ChangeMode = Body()):
     new_mode = chm.mode
+    hb_collection.update_many({}, {"$set": {"mode": new_mode}})
+    return "CHANGE_MODE OK"
 
 @router.post("/on_off")
 def hard_on_off(on_off: OnOff):
     is_on = on_off.is_on
+    hb_collection.update_many({}, {"$set": {"is_on": is_on}})
+    return "ON/OFF OK"
