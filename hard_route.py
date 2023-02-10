@@ -49,7 +49,7 @@ def debug_clear(hr: int):
 
 @router.get("/get_status")
 def hard_get_status():
-    hard_rate = get_field_from_hb_collection(["hard_rate"])["hard_rate"]
+    hard_rate = get_field_from_hb_collection(["current_heartrate"])["current_heartrate"]
     # Mock status
     if (hard_rate > 130):
         status = 2
