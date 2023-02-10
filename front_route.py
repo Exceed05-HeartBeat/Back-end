@@ -20,15 +20,15 @@ def front_get_mode():
     md = hb_collection.find_one({}, {"_id": False})
     return {"current_heartrate": md["current_heartrate"]}
 
-@router.get("/get_normal_heartrate")
-def front_get_normal_heartrate():
-    hr = hb_collection.find_one({}, {"_id": False})
-    return hr["normal_heartrate"]
+# @router.get("/get_normal_heartrate")
+# def front_get_normal_heartrate():
+#     hr = hb_collection.find_one({}, {"_id": False})
+#     return hr["normal_heartrate"]
 
-@router.get("/get_excercise_heartrate")
-def front_get_normal_heartrate():
-    hr = hb_collection.find_one({}, {"_id": False})
-    return hr["excercise_heartrate"]
+# @router.get("/get_excercise_heartrate")
+# def front_get_normal_heartrate():
+#     hr = hb_collection.find_one({}, {"_id": False})
+#     return hr["excercise_heartrate"]
 
 def calculate_maxrate():
     hr = hb_collection.find_one({}, {"_id": False})

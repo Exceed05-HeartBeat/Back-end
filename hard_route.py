@@ -94,5 +94,6 @@ def hard_on_off(on_off: OnOff):
     hb_collection.update_many({}, {"$set": {"is_on": is_on}})
     return "ON/OFF OK"
 
-@router.post("/insert_normal"):
-def inser_normal()
+# @router.post("/insert_normal"):
+# def inser_normal(heartrate:HeartRate = Body()):
+#     hr = hb_collection.find({}, {"_id"})
