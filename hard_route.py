@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body
 from database import db, hb_collection
 from pydantic import BaseModel
 from datetime import datetime, timedelta
+from front_route import calculate_maxrate
 import random
 from database import HeartRate
 router = APIRouter(prefix="/hard")
@@ -53,16 +54,31 @@ def debug_clear(hr: int):
     clear_history(hr)
     return "Ok"
 
+def get_status():
+    d = hb_collection.find_one({}, {"_id": 0})
+    m = d["mode"]
+    hard_rate = d["current_heartrate"]
+    max_rate = calculate_maxrate()
+    status = 999
+    if m == 0:
+        if (hard_rate > 110): #red
+            status = 2
+        elif (hard_rate > 100 and hard_rate < 110): #yellow
+            status = 1
+        elif (hard_rate < 100): #less than 70% green
+            status = 0
+    elif m == 1:
+        if (hard_rate > max_rate*0.8): #red
+            status = 2
+        elif (hard_rate > max_rate*0.7 and hard_rate < max_rate*0.8): #yellow
+            status = 1
+        elif (hard_rate < max_rate*0.7): #less than 70% green
+            status = 0
+    return status
+
 @router.get("/get_status")
 def hard_get_status():
-    hard_rate = get_field_from_hb_collection(["current_heartrate"])["current_heartrate"]
-    # Mock status
-    if (hard_rate > 130):
-        status = 2
-    elif (hard_rate > 120):
-        status = 1
-    else:
-        status = 0
+    status = get_status()
     return {"status": status}
 
 @router.get("/get_mode")
@@ -70,15 +86,6 @@ def hard_get_mode():
     mode = get_field_from_hb_collection(["mode"])["mode"]
     return {"mode": mode}
 
-def insert_heart_rate(rate: int, to: str):
-    c = hb_collection.find_one()
-    if not c:
-        print("insert hr error")
-        return
-    f = dict(c[to])
-    now = str(round(datetime.now().timestamp()))
-    f[now] = f
-    hb_collection.update_many({}, {"$set": {to: f}})
 
 # recive bpm from hard
 @router.post("/send_bpm")
@@ -89,7 +96,7 @@ def hard_send_bpm(bpm_get: Bpm = Body()):
               "mode": 1,
               "status": 1}
     a = {"time": round(datetime.now().timestamp()), "bpm": bpm}
-    hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}, "$push": {"normal": a}})
+    hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}, "$push": {"normal_heartrate": a}})
     return "SEND_BPM OK"
 
 # recieve change mode button
@@ -105,6 +112,4 @@ def hard_on_off(on_off: OnOff):
     hb_collection.update_many({}, {"$set": {"is_on": is_on}})
     return "ON/OFF OK"
 
-# @router.post("/insert_normal"):
-# def inser_normal(heartrate:HeartRate = Body()):
-#     hr = hb_collection.find({}, {"_id"})
+
