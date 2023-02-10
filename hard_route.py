@@ -29,7 +29,7 @@ def clear_history(hr: int):
 
 def get_field_from_hb_collection(k: list):
     ret = {}
-    data = hb_collection.find_one({}, {"_id": id});
+    data = hb_collection.find_one({}, {"_id": 0});
     if not data:
         print("Not Ok")
     for r in k:
