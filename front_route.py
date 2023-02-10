@@ -38,6 +38,7 @@ def calculate_maxrate():
     age = current_year - year
     max_rate = 207 - (age*0.7)
     return max_rate
+
 #need to insert insteed of update
 @router.post("/data")
 def front_post_data(heartrate: HeartRate = Body()):
@@ -52,7 +53,7 @@ def front_post_data(heartrate: HeartRate = Body()):
 #     birth = hr["birth"]
 #     year = datetime.datetime.strptime(birth, '%Y-%m-%d').year
 #     return year
-print(calculate_maxrate())
+# print(calculate_maxrate())
 
 
 
