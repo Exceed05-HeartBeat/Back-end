@@ -78,17 +78,17 @@ def hard_send_bpm(bpm_get: Bpm = Body()):
               "mode": 1,
               "status": 1}
     hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}})
-    return "OK"
+    return "SEND_BPM OK"
 
 # recieve change mode button
 @router.post("/change_mode")
 def hard_change_mode(chm: ChangeMode = Body()):
     new_mode = chm.mode
     hb_collection.update_many({}, {"$set": {"mode": new_mode}})
-    return "OK"
+    return "CHANGE_MODE OK"
 
 @router.post("/on_off")
 def hard_on_off(on_off: OnOff):
     is_on = on_off.is_on
     hb_collection.update_many({}, {"$set": {"is_on": is_on}})
-    return "OK"
+    return "ON/OFF OK"
