@@ -71,13 +71,14 @@ def hard_get_mode():
 
 # recive bpm from hard
 @router.post("/send_bpm")
-def hard_send_bpm(bpm: Bpm = Body()): 
-    bmp = bpm.bpm
+def hard_send_bpm(bpm_get: Bpm = Body()): 
+    bpm = bpm_get.bpm
     record = {"time": datetime.now(),
               "bpm": bpm,
               "mode": 1,
               "status": 1}
-    hb_history.insert_one(record)
+    hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}})
+    return "OK"
 
 # recieve change mode button
 @router.post("/change_mode")
