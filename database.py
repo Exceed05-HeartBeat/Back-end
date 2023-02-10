@@ -20,4 +20,5 @@ class HeartRate(BaseModel):
     excercise_heartrate: Optional[int]
     normal_heartrate: Optional[int]
     is_on : int
+    mode: int
 
