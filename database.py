@@ -13,11 +13,11 @@ client = MongoClient(f"mongodb://{USER}:{PASSWORD}@mongo.exceed19.online:8443/?a
 db = client["exceed05"]
 hb_collection = db["heart-beat"]
 
-class HeartBeat(BaseModel):
+class HeartRate(BaseModel):
     name: Optional[str]
     birth: Optional[datetime]
     current_heartrate: Optional[int]
-    heartrate_excercise: Optional[int]
+    excercise_heartrate: Optional[int]
     normal_heartrate: Optional[int]
-    is_on : bool
+    is_on : int
 
