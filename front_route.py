@@ -31,9 +31,9 @@ def calculate_maxrate():
     return max_rate
 
 
-@router.get("/get_status")
-def front_get_status():
-    return {"status": 1}
+# @router.get("/get_status")
+# def front_get_status():
+#     return {"status": 1}
 
 @router.get("/mode")
 def front_get_mode():
