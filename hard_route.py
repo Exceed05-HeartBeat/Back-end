@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body
 from database import db, hb_collection
 from pydantic import BaseModel
 from datetime import datetime, timedelta
-from front_route import calculate_maxrate
+from front_route import calculate_maxrate, get_status
 import random
 from database import HeartRate
 router = APIRouter(prefix="/hard")
@@ -54,27 +54,6 @@ def debug_clear(hr: int):
     clear_history(hr)
     return "Ok"
 
-def get_status():
-    d = hb_collection.find_one({}, {"_id": 0})
-    m = d["mode"]
-    hard_rate = d["current_heartrate"]
-    max_rate = calculate_maxrate()
-    status = 999
-    if m == 0:
-        if (hard_rate > 110): #red
-            status = 2
-        elif (hard_rate > 100 and hard_rate < 110): #yellow
-            status = 1
-        elif (hard_rate < 100): #less than 70% green
-            status = 0
-    elif m == 1:
-        if (hard_rate > max_rate*0.8): #red
-            status = 2
-        elif (hard_rate > max_rate*0.7 and hard_rate < max_rate*0.8): #yellow
-            status = 1
-        elif (hard_rate < max_rate*0.7): #less than 70% green
-            status = 0
-    return status
 
 @router.get("/get_status")
 def hard_get_status():
