@@ -82,30 +82,54 @@ def hard_send_bpm(bpm_get: Bpm = Body()):
     # m = 0 => normal
     if m == 0 and (status == 2):
         hb_db = hb_collection.find_one({}, {"_id": False})
-        hb_collection.update_one({}, {"$set": {"current_time_warning_normal": str(now.time().strftime("%H:%M:%S"))}})
+        print(hb_db["last_time_warning_normal"]["date"])
+
         time_normal_current = now.time().strftime("%H:%M:%S")
         time_current = datetime.strptime(time_normal_current, "%H:%M:%S")
-        last_normal_time_record = datetime.strptime(hb_db["current_time_warning_normal"], "%H:%M:%S")
+        last_normal_time_record = datetime.strptime(hb_db["last_time_warning_normal"]["time"], "%H:%M:%S")
+        last_normal_date_record = datetime.strptime(hb_db["last_time_warning_normal"]["date"], '%Y-%m-%d')
 
-        print(last_normal_time_record.date())
-        if (time_current.minute - last_normal_time_record.minute) > 1:
-            hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
+        current_date_warning = datetime.strptime(hb_db["last_time_warning_normal"]["date"], '%Y-%m-%d')
+        print(current_date_warning.date(), last_normal_date_record.date())
+
+        # print(last_normal_time_record.date())
+        if((current_date_warning.date() == last_normal_date_record.date()) and (time_current.hour == last_normal_time_record.hour)):
+            if (time_current.minute - last_normal_time_record.minute) > 1:
+                hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
+                hb_collection.update_one({}, {"$set": {"last_time_warning_normal": 
+                                               { "date":str(now.date()) ,
+                                                "time":str(now.time().strftime("%H:%M:%S"))}}})
         else:
-            return "Cannot record heartrate"
+            hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
+            hb_collection.update_one({}, {"$set": {"last_time_warning_normal": 
+                                               { "date":str(now.date()) ,
+                                                "time":str(now.time().strftime("%H:%M:%S"))}}})
 
     # m = 0 => excercise
     elif m == 1 and (status == 2):
         hb_db = hb_collection.find_one({}, {"_id": False})
-        hb_collection.update_one({}, {"$set": {"current_time_warning_excercise": str(now.time().strftime("%H:%M:%S"))}})
-        time_excercise_current = now.time().strftime("%H:%M:%S")
-        time_current = datetime.strptime(time_excercise_current, "%H:%M:%S")
-        last_excercise_time_record = datetime.strptime(hb_db["current_time_warning_excercise"], "%H:%M:%S")
+        print(hb_db["last_time_warning_exercise"]["date"])
 
-        print(last_excercise_time_record.day)
-        if (time_current.minute - last_excercise_time_record.minute) > 1:
-            hb_collection.update_many({}, {"$push": {"exercise_heartrate": record}})
+        time_exercise_current = now.time().strftime("%H:%M:%S")
+        time_current_exercise = datetime.strptime(time_exercise_current, "%H:%M:%S")
+        last_exercise_time_record = datetime.strptime(hb_db["last_time_warning_exercise"]["time"], "%H:%M:%S")
+        last_exercise_date_record = datetime.strptime(hb_db["last_time_warning_exercise"]["date"], '%Y-%m-%d')
+
+        current_date_warning = datetime.strptime(hb_db["last_time_warning_exercise"]["date"], '%Y-%m-%d')
+        print(current_date_warning.date(), last_exercise_date_record.date())
+
+        # print(last_exercise_time_record.date())
+        if((current_date_warning.date() == last_exercise_date_record.date()) and (time_current_exercise.hour == last_exercise_time_record.hour)):
+            if (time_current_exercise.minute - last_exercise_time_record.minute) > 1:
+                hb_collection.update_many({}, {"$push": {"exercise_heartrate": record}})
+                hb_collection.update_one({}, {"$set": {"last_time_warning_exercise": 
+                                               { "date":str(now.date()) ,
+                                                "time":str(now.time().strftime("%H:%M:%S"))}}})
         else:
-            return "Cannot record heartrate"
+            hb_collection.update_many({}, {"$push": {"exercise_heartrate": record}})
+            hb_collection.update_one({}, {"$set": {"last_time_warning_exercise": 
+                                               { "date":str(now.date()) ,
+                                                "time":str(now.time().strftime("%H:%M:%S"))}}})
 
     return "SEND_BPM OK"
 

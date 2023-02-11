@@ -23,6 +23,14 @@ class Excercise_heartrate(BaseModel):
     time: str
     bmp: int
 
+class Current_time_warning_normal(BaseModel):
+    date: str
+    time: str
+
+class Current_time_warning_exercise(BaseModel):
+    date: str
+    time: str
+
 
 class HeartRate(BaseModel):
     name: Optional[str]
@@ -32,8 +40,8 @@ class HeartRate(BaseModel):
     normal_heartrate: Optional[List[Normal_heartrate]]
     is_on : Optional[int]
     mode: Optional[int]
-    current_time_warning_normal: Optional[str]
-    current_time_warning_exercise: Optional[str]
+    current_time_warning_normal: Optional[Current_time_warning_normal]
+    current_time_warning_exercise: Optional[Current_time_warning_exercise]
 
 # class BirthName(BaseModel):
 #     name: str
