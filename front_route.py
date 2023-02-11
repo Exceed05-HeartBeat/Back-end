@@ -39,18 +39,18 @@ def get_status():
     max_rate = calculate_maxrate()
     status = 999
     if m == 0:
-        if (hard_rate > 110): #red
+        if (hard_rate > 110 or hard_rate < 30): #red
             status = 2
-        elif (hard_rate > 100 and hard_rate < 110): #yellow
+        elif ((hard_rate > 100 and hard_rate < 110) or (hard_rate < 60 and hard_rate > 30)): #yellow
             status = 1
-        elif (hard_rate < 100): #less than 70% green
+        elif (hard_rate < 100 or hard_rate > 60): #less than 70% green
             status = 0
     elif m == 1:
-        if (hard_rate > max_rate*0.8): #red
+        if (hard_rate > max_rate*0.8 or hard_rate < 30): #red
             status = 2
-        elif (hard_rate > max_rate*0.7 and hard_rate < max_rate*0.8): #yellow
+        elif ((hard_rate > max_rate*0.7 and hard_rate < max_rate*0.8)  or (hard_rate < 60 and hard_rate > 30)): #yellow
             status = 1
-        elif (hard_rate < max_rate*0.7): #less than 70% green
+        elif (hard_rate < max_rate*0.7 or hard_rate > 60): #less than 70% green
             status = 0
     return status
 
