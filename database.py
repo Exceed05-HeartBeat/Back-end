@@ -32,10 +32,12 @@ class HeartRate(BaseModel):
     normal_heartrate: Optional[List[Normal_heartrate]]
     is_on : Optional[int]
     mode: Optional[int]
+    current_time_warning_normal: Optional[str]
+    current_time_warning_excercise: Optional[str]
 
-class BirthName(BaseModel):
-    name: str
-    birth: str
+# class BirthName(BaseModel):
+#     name: str
+#     birth: str
 
 if __name__ == "__main__":
     import random

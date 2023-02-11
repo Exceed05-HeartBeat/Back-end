@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 from database import db, hb_collection
 from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from front_route import calculate_maxrate, get_status
 import random
 from database import HeartRate
@@ -77,9 +77,32 @@ def hard_send_bpm(bpm_get: Bpm = Body()):
     hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}}) 
     status = get_status()
     m = get_field_from_hb_collection(["mode"])["mode"]
+    print(m)
+
+    # m = 0 => normal
     if m == 0 and (status == 2):
-        hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
+        hb_db = hb_collection.find_one({}, {"_id": False})
+        hb_collection.update_one({}, {"$set": {"current_time_warning_normal": str(now.time().strftime("%H:%M:%S"))}})
+        time_normal_current = now.time().strftime("%H:%M:%S")
+        time_current = datetime.strptime(time_normal_current, "%H:%M:%S")
+        last_normal_time_record = datetime.strptime(hb_db["current_time_warning_normal"], "%H:%M:%S")
+        if (time_current.minute - last_normal_time_record.minute) > 1:
+            hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
+        else:
+            return "Cannot record heartrate"
+
+    # m = 0 => excercise
     elif m == 1 and (status == 2):
+        hb_db = hb_collection.find_one({}, {"_id": False})
+        hb_collection.update_one({}, {"$set": {"current_time_warning_excercise": str(now.time().strftime("%H:%M:%S"))}})
+        time_excercise_current = now.time().strftime("%H:%M:%S")
+        time_current = datetime.strptime(time_excercise_current, "%H:%M:%S")
+        last_excercise_time_record = datetime.strptime(hb_db["current_time_warning_excercise"], "%H:%M:%S")
+        if (time_current.minute - last_excercise_time_record.minute) > 1:
+            hb_collection.update_many({}, {"$push": {"excercise_heartrate": record}})
+        else:
+            return "Cannot record heartrate"
+
         hb_collection.update_many({}, { "$push": {"excercise_heartrate": record}})
     return "SEND_BPM OK"
 

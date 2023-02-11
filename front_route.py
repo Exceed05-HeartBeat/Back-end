@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body
 from database import db, hb_collection
 from database import HeartRate
 from typing import Optional
-from database import BirthName
+from database import HeartRate
 # from datetime import datetime, timedelta, date
 import datetime
 
@@ -10,7 +10,7 @@ router = APIRouter(prefix="/front")
 
 def get_field_from_hb_collection(k: list):
     ret = {}
-    data = hb_collection.find_one({}, {"_id": 0});
+    data = hb_collection.find_one({}, {"_id": 0})
     if not data:
         print("Not Ok")
     for r in k:
@@ -19,13 +19,14 @@ def get_field_from_hb_collection(k: list):
 
 
 @router.post("/data")
-def front_post_data(data: BirthName):
+def front_post_data(data: HeartRate):
     hb_collection.update_one({}, {"$set" :{"name":data.name, "birth":data.birth}})
     return {"name":data.name, "birth":data.birth}
 
 def calculate_maxrate():
     hr = hb_collection.find_one({}, {"_id": False})
     birth = hr["birth"]
+    # print(birth)
     year = datetime.datetime.strptime(birth, '%Y-%m-%d').year
     current_year = datetime.datetime.now().year
     age = current_year - year
@@ -111,6 +112,7 @@ def front_get_all():
 #     return {"status": status}
 
 # print(front_get_excercise())
+# print(type(calculate_maxrate()))
 
 
 
