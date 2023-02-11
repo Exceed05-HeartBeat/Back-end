@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from pymongo import MongoClient
 from pydantic import BaseModel
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from typing import Optional, List
 load_dotenv(".env")
 
@@ -14,11 +14,13 @@ db = client["exceed05"]
 hb_collection = db["heart-beat"]
 
 class Normal_heartrate(BaseModel):
-    timestamp: int
+    date: str
+    time: str
     bmp: int
 
 class Excercise_heartrate(BaseModel):
-    timestamp: int
+    date: str
+    time: str
     bmp: int
 
 
@@ -34,3 +36,13 @@ class HeartRate(BaseModel):
 class BirthName(BaseModel):
     name: str
     birth: str
+
+if __name__ == "__main__":
+    import random
+    import time
+    now = datetime.now()
+    data = {"date": str(now.date()),
+            "time": str(now.time().strftime("%H:%M:%S")),
+            "bpm": 44}
+    hb_collection.update_many({}, {"$set": {"excercise_heartrate": [data]}})
+    hb_collection.update_many({}, {"$set": {"normal_heartrate": [data]}})

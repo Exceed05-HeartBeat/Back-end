@@ -70,12 +70,17 @@ def hard_get_mode():
 @router.post("/send_bpm")
 def hard_send_bpm(bpm_get: Bpm = Body()): 
     bpm = bpm_get.bpm
-    record = {"time": datetime.now(),
-              "bpm": bpm,
-              "mode": 1,
-              "status": 1}
-    a = {"time": round(datetime.now().timestamp()), "bpm": bpm}
-    hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}, "$push": {"normal_heartrate": a}})
+    now = datetime.now()
+    record = {"date": str(now.date()),
+              "time": str(now.time().strftime("%H:%M:%S")),
+              "bpm": bpm}
+    hb_collection.update_many({}, {"$set": {"current_heartrate": bpm}}) 
+    status = get_status()
+    m = get_field_from_hb_collection(["mode"])["mode"]
+    if m == 0 and (status == 2):
+        hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
+    elif m == 1 and (status == 2):
+        hb_collection.update_many({}, { "$push": {"excercise_heartrate": record}})
     return "SEND_BPM OK"
 
 # recieve change mode button
