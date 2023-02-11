@@ -28,12 +28,12 @@ class HeartRate(BaseModel):
     name: Optional[str]
     birth: Optional[str]
     current_heartrate: Optional[int]
-    excercise_heartrate: Optional[List[Excercise_heartrate]]
+    exercise_heartrate: Optional[List[Excercise_heartrate]]
     normal_heartrate: Optional[List[Normal_heartrate]]
     is_on : Optional[int]
     mode: Optional[int]
     current_time_warning_normal: Optional[str]
-    current_time_warning_excercise: Optional[str]
+    current_time_warning_exercise: Optional[str]
 
 # class BirthName(BaseModel):
 #     name: str
@@ -46,5 +46,5 @@ if __name__ == "__main__":
     data = {"date": str(now.date()),
             "time": str(now.time().strftime("%H:%M:%S")),
             "bpm": 44}
-    hb_collection.update_many({}, {"$set": {"excercise_heartrate": [data]}})
+    hb_collection.update_many({}, {"$set": {"exercise_heartrate": [data]}})
     hb_collection.update_many({}, {"$set": {"normal_heartrate": [data]}})

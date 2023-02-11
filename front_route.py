@@ -70,10 +70,10 @@ def get_heartrate():
     md = hb_collection.find_one({}, {"_id": False})
     return {"current_heartrate": md["current_heartrate"]}
 
-@router.get("/get_excercise_heartrate")
+@router.get("/get_exercise_heartrate")
 def front_get_excercise():
     md = list(hb_collection.find({}, {"_id": False}))
-    return md[0]["excercise_heartrate"]
+    return md[0]["exercise_heartrate"]
 
 @router.get("/get_normal_heartrate")
 def front_get_normal():
@@ -83,7 +83,7 @@ def front_get_normal():
 @router.get("/get_all_heartrate")
 def front_get_all():
     md = list(hb_collection.find({}, {"_id": False}))
-    return md[0]["normal_heartrate"] + md[0]["excercise_heartrate"]
+    return md[0]["normal_heartrate"] + md[0]["exercise_heartrate"]
 
 
 # @router.get("/status_excersice_mode")

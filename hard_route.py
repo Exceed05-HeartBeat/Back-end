@@ -86,6 +86,8 @@ def hard_send_bpm(bpm_get: Bpm = Body()):
         time_normal_current = now.time().strftime("%H:%M:%S")
         time_current = datetime.strptime(time_normal_current, "%H:%M:%S")
         last_normal_time_record = datetime.strptime(hb_db["current_time_warning_normal"], "%H:%M:%S")
+
+        print(last_normal_time_record.date())
         if (time_current.minute - last_normal_time_record.minute) > 1:
             hb_collection.update_many({}, {"$push": {"normal_heartrate": record}})
         else:
@@ -98,12 +100,13 @@ def hard_send_bpm(bpm_get: Bpm = Body()):
         time_excercise_current = now.time().strftime("%H:%M:%S")
         time_current = datetime.strptime(time_excercise_current, "%H:%M:%S")
         last_excercise_time_record = datetime.strptime(hb_db["current_time_warning_excercise"], "%H:%M:%S")
+
+        print(last_excercise_time_record.day)
         if (time_current.minute - last_excercise_time_record.minute) > 1:
-            hb_collection.update_many({}, {"$push": {"excercise_heartrate": record}})
+            hb_collection.update_many({}, {"$push": {"exercise_heartrate": record}})
         else:
             return "Cannot record heartrate"
 
-        hb_collection.update_many({}, { "$push": {"excercise_heartrate": record}})
     return "SEND_BPM OK"
 
 # recieve change mode button
