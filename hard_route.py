@@ -94,6 +94,8 @@ def hard_change_mode(chm: ChangeMode = Body()):
 def hard_on_off(on_off: OnOff):
     is_on = on_off.is_on
     hb_collection.update_many({}, {"$set": {"is_on": is_on}})
+    if is_on == 0:
+        hb_collection.update_many({}, {"$set": {"current_heartrate": -1}})
     return "ON/OFF OK"
 
 
